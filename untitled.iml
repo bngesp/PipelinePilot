@@ -2,7 +2,15 @@
 <module type="GENERAL_MODULE" version="4">
   <component name="NewModuleRootManager" inherit-compiler-output="true">
     <exclude-output />
-    <content url="file://$MODULE_DIR$" />
+    <content url="file://$MODULE_DIR$">
+      <excludeFolder url="file://$MODULE_DIR$/.gradle/8.12/expanded" />
+      <excludeFolder url="file://$MODULE_DIR$/.gradle/8.12/vcsMetadata" />
+      <excludeFolder url="file://$MODULE_DIR$/.gradle/configuration-cache/477e619d-8131-4c4d-af42-ae538966a7dd" />
+      <excludeFolder url="file://$MODULE_DIR$/.gradle/configuration-cache/785f3c5f-69f2-4c59-a504-48f656296d23" />
+      <excludeFolder url="file://$MODULE_DIR$/.gradle/configuration-cache/8783c3e2-d331-4f54-af4b-f9f9a521b5d5" />
+      <excludeFolder url="file://$MODULE_DIR$/.gradle/configuration-cache/a000e974-937a-4ba1-99fc-98cdf79e536e" />
+      <excludeFolder url="file://$MODULE_DIR$/.gradle/configuration-cache/ac2f42e2-96d3-4392-92a5-f658b2b1405f" />
+    </content>
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
 </module>
