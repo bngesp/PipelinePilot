@@ -17,39 +17,41 @@ import java.util.concurrent.ConcurrentHashMap
 class GitLabApiService {
     private val logger = Logger.getInstance(GitLabApiService::class.java)
     private val gitLabApiCache = ConcurrentHashMap<String, GitLabApi>()
-    
+
     /**
      * Get a GitLabApi instance for the given project.
      * Uses cached instance if available and settings haven't changed.
      */
     fun getGitLabApi(): GitLabApi? {
         val settings = service<GitLabPipelineSettings>()
-        
+
         if (!settings.isConfigured()) {
             logger.info("GitLab API not configured. Please set API token in settings.")
             return null
         }
-        
+
         val cacheKey = "${settings.gitlabUrl}:${settings.apiToken}"
-        
-        return gitLabApiCache.computeIfAbsent(cacheKey) {
+
+        if (!gitLabApiCache.containsKey(cacheKey)) {
             try {
                 logger.info("Creating new GitLabApi instance for ${settings.gitlabUrl}")
-                GitLabApi(settings.gitlabUrl, settings.apiToken)
+                gitLabApiCache[cacheKey] = GitLabApi(settings.gitlabUrl, settings.apiToken)
             } catch (e: Exception) {
                 logger.error("Failed to create GitLabApi instance", e)
-                null
+                return null
             }
         }
+
+        return gitLabApiCache[cacheKey]
     }
-    
+
     /**
      * Test connection to GitLab API.
      * @return Pair of success flag and message
      */
     fun testConnection(): Pair<Boolean, String> {
         val gitLabApi = getGitLabApi() ?: return Pair(false, "GitLab API not configured")
-        
+
         return try {
             // Try to get current user to verify connection
             val user = gitLabApi.userApi.currentUser
@@ -62,7 +64,7 @@ class GitLabApiService {
             Pair(false, "Unexpected error: ${e.message}")
         }
     }
-    
+
     /**
      * Clear the GitLabApi cache.
      * Should be called when settings change.
