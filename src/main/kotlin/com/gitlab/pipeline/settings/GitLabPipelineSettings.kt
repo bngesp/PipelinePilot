@@ -6,27 +6,27 @@ import com.intellij.openapi.components.Storage
 import com.intellij.util.xmlb.XmlSerializerUtil
 
 /**
- * Persistent settings for GitLab Pipeline Manager plugin.
+ * Persistent settings for PipelinePilot plugin.
  * Stores GitLab server URL and API token.
  */
 @State(
     name = "GitLabPipelineSettings",
-    storages = [Storage("gitlab-pipeline-manager.xml")]
+    storages = [Storage("pipeline-pilot.xml")]
 )
 class GitLabPipelineSettings : PersistentStateComponent<GitLabPipelineSettings> {
-    
+
     var gitlabUrl: String = "https://gitlab.com"
     var apiToken: String = ""
     var autoRefreshEnabled: Boolean = true
     var autoRefreshInterval: Int = 60 // seconds
     var showNotifications: Boolean = true
-    
+
     override fun getState(): GitLabPipelineSettings = this
-    
+
     override fun loadState(state: GitLabPipelineSettings) {
         XmlSerializerUtil.copyBean(state, this)
     }
-    
+
     fun isConfigured(): Boolean {
         return apiToken.isNotBlank()
     }

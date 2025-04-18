@@ -1,6 +1,6 @@
 <idea-plugin>
     <id>com.gitlab.pipeline</id>
-    <name>GitLab Pipeline Manager</name>
+    <name>PipelinePilot</name>
     <vendor>Your Company</vendor>
 
     <!-- Product and plugin compatibility requirements -->
@@ -26,7 +26,7 @@
                 parentId="tools"
                 instance="com.gitlab.pipeline.settings.GitLabPipelineSettingsConfigurable"
                 id="com.gitlab.pipeline.settings.GitLabPipelineSettingsConfigurable"
-                displayName="GitLab Pipeline Manager"/>
+                displayName="PipelinePilot"/>
 
         <!-- Notifications -->
         <notificationGroup id="GitLab Pipeline Notifications"
