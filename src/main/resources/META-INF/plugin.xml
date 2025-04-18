@@ -1,0 +1,63 @@
+<idea-plugin>
+    <id>com.gitlab.pipeline</id>
+    <name>GitLab Pipeline Manager</name>
+    <vendor>Your Company</vendor>
+
+    <!-- Product and plugin compatibility requirements -->
+    <depends>com.intellij.modules.platform</depends>
+    <depends>org.jetbrains.plugins.gitlab</depends>
+    <depends>Git4Idea</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <!-- Tool Window -->
+        <toolWindow id="GitLab Pipelines"
+                    anchor="bottom"
+                    factoryClass="com.gitlab.pipeline.ui.GitLabPipelineToolWindowFactory"
+                    icon="/icons/gitlab-pipeline.svg"/>
+
+        <!-- Services -->
+        <applicationService serviceImplementation="com.gitlab.pipeline.settings.GitLabPipelineSettings"/>
+        <applicationService serviceImplementation="com.gitlab.pipeline.service.GitLabApiService"/>
+        <projectService serviceImplementation="com.gitlab.pipeline.service.GitLabPipelineService"/>
+        <projectService serviceImplementation="com.gitlab.pipeline.service.GitLabJobService"/>
+
+        <!-- Settings -->
+        <applicationConfigurable
+                parentId="tools"
+                instance="com.gitlab.pipeline.settings.GitLabPipelineSettingsConfigurable"
+                id="com.gitlab.pipeline.settings.GitLabPipelineSettingsConfigurable"
+                displayName="GitLab Pipeline Manager"/>
+
+        <!-- Notifications -->
+        <notificationGroup id="GitLab Pipeline Notifications"
+                           displayType="BALLOON"
+                           key="notification.group.gitlab.pipeline"/>
+    </extensions>
+
+    <actions>
+        <!-- Pipeline Actions -->
+        <group id="GitLabPipeline.ToolbarActions"
+               class="com.gitlab.pipeline.actions.GitLabPipelineActionGroup"
+               text="GitLab Pipeline Actions"
+               description="GitLab Pipeline actions"
+               popup="true">
+            <add-to-group group-id="ToolbarRunGroup" anchor="last"/>
+        </group>
+
+        <!-- Context Menu Actions -->
+        <action id="GitLabPipeline.RunPipeline"
+                class="com.gitlab.pipeline.actions.RunPipelineAction"
+                text="Run GitLab Pipeline"
+                description="Run a new pipeline on the current branch">
+            <add-to-group group-id="GitLabPipeline.ToolbarActions" anchor="first"/>
+            <keyboard-shortcut keymap="$default" first-keystroke="control alt R"/>
+        </action>
+
+        <action id="GitLabPipeline.RefreshPipelines"
+                class="com.gitlab.pipeline.actions.RefreshPipelinesAction"
+                text="Refresh Pipelines"
+                description="Refresh the list of pipelines">
+            <add-to-group group-id="GitLabPipeline.ToolbarActions" anchor="after" relative-to-action="GitLabPipeline.RunPipeline"/>
+        </action>
+    </actions>
+</idea-plugin>
