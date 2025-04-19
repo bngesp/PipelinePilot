@@ -20,7 +20,7 @@ class GitLabPipelineSettingsComponent {
     private val autoRefreshCheckBox = JBCheckBox("Enable auto-refresh")
     private val refreshIntervalSpinner = JSpinner(SpinnerNumberModel(60, 10, 3600, 10))
     private val showNotificationsCheckBox = JBCheckBox("Show notifications for pipeline status changes")
-    
+
     val panel: JPanel = FormBuilder.createFormBuilder()
         .addLabeledComponent(JBLabel("GitLab URL:"), gitlabUrlField, 1, false)
         .addLabeledComponent(JBLabel("API Token:"), apiTokenField, 1, false)
@@ -30,41 +30,41 @@ class GitLabPipelineSettingsComponent {
         .addComponentFillVertically(JPanel(), 0)
         .panel
         .apply {
-            border = UI.getBorder()
+            border = javax.swing.BorderFactory.createEmptyBorder(10, 10, 10, 10)
         }
-    
+
     init {
         // Add listeners for enabling/disabling refresh interval based on checkbox
         autoRefreshCheckBox.addActionListener {
             refreshIntervalSpinner.isEnabled = autoRefreshCheckBox.isSelected
         }
     }
-    
+
     var gitlabUrl: String
         get() = gitlabUrlField.text
         set(value) {
             gitlabUrlField.text = value
         }
-    
+
     var apiToken: String
         get() = String(apiTokenField.password)
         set(value) {
             apiTokenField.text = value
         }
-    
+
     var autoRefreshEnabled: Boolean
         get() = autoRefreshCheckBox.isSelected
         set(value) {
             autoRefreshCheckBox.isSelected = value
             refreshIntervalSpinner.isEnabled = value
         }
-    
+
     var autoRefreshInterval: Int
         get() = refreshIntervalSpinner.value as Int
         set(value) {
             refreshIntervalSpinner.value = value
         }
-    
+
     var showNotifications: Boolean
         get() = showNotificationsCheckBox.isSelected
         set(value) {

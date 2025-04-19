@@ -20,14 +20,14 @@ import kotlinx.coroutines.withContext
  * Action for running a new GitLab pipeline on the current branch.
  */
 class RunPipelineAction : AnAction(), DumbAware {
-    
+
     /**
      * Execute the action.
      */
     override fun actionPerformed(e: AnActionEvent) {
         val project = e.project ?: return
         val settings = service<GitLabPipelineSettings>()
-        
+
         if (!settings.isConfigured()) {
             Messages.showErrorDialog(
                 project,
@@ -36,7 +36,7 @@ class RunPipelineAction : AnAction(), DumbAware {
             )
             return
         }
-        
+
         val currentBranch = getCurrentBranch(project)
         if (currentBranch == null) {
             Messages.showErrorDialog(
@@ -46,7 +46,7 @@ class RunPipelineAction : AnAction(), DumbAware {
             )
             return
         }
-        
+
         // Confirm with user
         val confirmation = Messages.showYesNoDialog(
             project,
@@ -54,18 +54,18 @@ class RunPipelineAction : AnAction(), DumbAware {
             "Run GitLab Pipeline",
             Messages.getQuestionIcon()
         )
-        
+
         if (confirmation != Messages.YES) {
             return
         }
-        
+
         // Run pipeline
         val pipelineService = project.service<GitLabPipelineService>()
-        
+
         CoroutineScope(Dispatchers.Default).launch {
             try {
                 val pipeline = pipelineService.runPipeline(currentBranch)
-                
+
                 withContext(Dispatchers.Main) {
                     if (pipeline != null) {
                         Messages.showInfoMessage(
@@ -92,7 +92,7 @@ class RunPipelineAction : AnAction(), DumbAware {
             }
         }
     }
-    
+
     /**
      * Update the action presentation.
      */
@@ -100,14 +100,14 @@ class RunPipelineAction : AnAction(), DumbAware {
         val project = e.project
         e.presentation.isEnabledAndVisible = project != null
     }
-    
+
     /**
      * Get the current Git branch for the project.
      */
     private fun getCurrentBranch(project: Project): String? {
         return try {
             val repository = GitUtil.getRepositoryManager(project).repositories.firstOrNull()
-            repository?.let { GitBranchUtil.getCurrentBranch(it)?.name }
+            repository?.currentBranch?.name
         } catch (e: VcsException) {
             null
         }

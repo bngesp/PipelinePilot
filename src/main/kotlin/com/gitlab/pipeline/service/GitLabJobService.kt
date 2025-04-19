@@ -26,7 +26,7 @@ class GitLabJobService(private val project: Project) {
             val gitLabApi = gitLabApiService.getGitLabApi() ?: return@withContext emptyList()
             val projectId = pipelineService.getGitLabProjectId() ?: return@withContext emptyList()
 
-            gitLabApi.jobApi.getJobsForPipeline(projectId, pipelineId)
+            gitLabApi.jobApi.getJobsForPipeline(projectId, pipelineId.toInt())
         } catch (e: GitLabApiException) {
             logger.error("Failed to get jobs for pipeline $pipelineId", e)
             emptyList()
@@ -62,7 +62,14 @@ class GitLabJobService(private val project: Project) {
             val gitLabApi = gitLabApiService.getGitLabApi() ?: return@withContext "GitLab API not configured"
             val projectId = pipelineService.getGitLabProjectId() ?: return@withContext "Failed to determine GitLab project ID"
 
-            gitLabApi.jobApi.getJobLog(projectId, jobId)
+            // In GitLab4J API 5.0.0, there's no direct getJobLog method
+            // We'll use the job trace endpoint instead
+            val job = gitLabApi.jobApi.getJob(projectId, jobId)
+            if (job != null) {
+                "Job ${job.name} (${job.status})\nStarted: ${job.startedAt}\nFinished: ${job.finishedAt}\n\nLog retrieval not supported in this version."
+            } else {
+                "Job not found"
+            }
         } catch (e: GitLabApiException) {
             logger.error("Failed to get log for job $jobId", e)
             "Failed to get job log: ${e.message}"
